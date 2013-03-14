@@ -33,11 +33,18 @@ typedef enum{
 	EGOOPullRefreshLoading,	
 } EGOPullRefreshState;
 
-@protocol EGORefreshTableHeaderDelegate;
+@class EGORefreshTableHeaderView;
+
+@protocol EGORefreshTableHeaderDelegate <NSObject>
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view;
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view;
+@optional
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view;
+@end
+
 @interface EGORefreshTableHeaderView : UIView {
 	
-	id _delegate;
-	EGOPullRefreshState _state;
+    EGOPullRefreshState _state;
 
 	UILabel *_lastUpdatedLabel;
 	UILabel *_statusLabel;
@@ -47,7 +54,7 @@ typedef enum{
 
 }
 
-@property(nonatomic,assign) id <EGORefreshTableHeaderDelegate> delegate;
+@property(weak) id <EGORefreshTableHeaderDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame arrowImageName:(NSString *)arrow textColor:(UIColor *)textColor;
 
@@ -56,10 +63,4 @@ typedef enum{
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView;
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView;
 
-@end
-@protocol EGORefreshTableHeaderDelegate
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view;
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view;
-@optional
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view;
 @end
